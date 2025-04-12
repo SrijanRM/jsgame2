@@ -247,8 +247,9 @@ function circleCollidewithrectangle({
     )
 }
 
+let frame;
 function animate() {
-    requestAnimationFrame(animate);
+    frame = requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height)
 
     if (keys.w.pressed && lastkey === 'w') {
@@ -300,6 +301,11 @@ function animate() {
                 player.velocity.x = 5
             }
         }
+    }
+
+    if (pellets.length === 0) {
+        console.log('win')
+        cancelAnimationFrame(frame)
     }
 
     for (let i = pellets.length - 1; 0 < i; i--) {
