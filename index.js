@@ -1,4 +1,5 @@
 const canvas = document.querySelector('canvas');
+const scoreEL = document.querySelector('#scoreEL');
 const c = canvas.getContext('2d');
 console.log(c);
 
@@ -89,6 +90,7 @@ const keys = {
 }
 
 let lastkey = ''
+let score = 0
 
 const map = [
     ['1', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '2'],
@@ -306,10 +308,10 @@ function animate() {
         if (Math.hypot(pellet.position.x - player.position.x, pellet.position.y - player.position.y) < pellet.radius + player.radius) {
             console.log('touching ');
             pellets.splice(i, 1)
+            score += 10
+            scoreEL.innerHTML = score
         }
     }
-
-
 
     boundaries.forEach((boundary) => {
         boundary.draw();
