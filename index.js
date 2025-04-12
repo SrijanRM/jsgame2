@@ -78,6 +78,8 @@ const map = [
     ['-', ' ', ' ', ' ', ' ', ' ', '-'],
     ['-', ' ', '-', ' ', '-', ' ', '-'],
     ['-', ' ', ' ', ' ', ' ', ' ', '-'],
+    ['-', ' ', '-', ' ', '-', ' ', '-'],
+    ['-', ' ', ' ', ' ', ' ', ' ', '-'],
     ['-', '-', '-', '-', '-', '-', '-']
 ]
 
@@ -96,25 +98,101 @@ map.forEach((row, i) => {
     })
 })
 
+function circleCollidewithrectangle({
+    circle, rectangle
+}) {
+    return (
+        circle.position.y - circle.radius + circle.velocity.y <=
+        rectangle.position.y + rectangle.height &&
+        circle.position.x + circle.radius + circle.velocity.x >=
+        rectangle.position.x &&
+        circle.position.y + circle.radius + circle.velocity.y >=
+        rectangle.position.y &&
+        circle.position.x - circle.radius + circle.velocity.x <=
+        rectangle.position.x + rectangle.width
+    )
+}
+
 function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height)
-    boundaries.forEach((bundary) => {
-        bundary.draw();
-    })
-    player.update()
-    player.velocity.y = 0
-    player.velocity.x = 0
 
     if (keys.w.pressed && lastkey === 'w') {
-        player.velocity.y = -5
+        for (let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i]
+            if (circleCollidewithrectangle({
+                circle: { ...player, velocity: { x: 0, y: -5 } }, rectangle: boundary
+            })) {
+                player.velocity.y = 0
+                break
+            } else {
+                player.velocity.y = -5
+            }
+        }
     } else if (keys.a.pressed && lastkey === 'a') {
-        player.velocity.x = -5
+        for (let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i]
+            if (circleCollidewithrectangle({
+                circle: { ...player, velocity: { x: -5, y: 0 } }, rectangle: boundary
+            })) {
+                player.velocity.x = 0
+                breakass
+            } else {
+                player.velocity.x = -5
+            }
+        }
     } else if (keys.s.pressed && lastkey === 's') {
-        player.velocity.y = 5
+        for (let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i]
+            if (circleCollidewithrectangle({
+                circle: { ...player, velocity: { x: 0, y: 5 } }, rectangle: boundary
+            })) {
+                player.velocity.y = 0
+                break
+            } else {
+                player.velocity.y = 5
+            }
+        }
+
     } else if (keys.d.pressed && lastkey === 'd') {
-        player.velocity.x = 5
+        for (let i = 0; i < boundaries.length; i++) {
+            const boundary = boundaries[i]
+            if (circleCollidewithrectangle({
+                circle: { ...player, velocity: { x: 5, y: 0 } }, rectangle: boundary
+            })) {
+                player.velocity.x = 0
+                break
+            } else {
+                player.velocity.x = 5
+            }
+        }
     }
+
+    boundaries.forEach((boundary) => {
+        boundary.draw();
+
+        if (circleCollidewithrectangle({
+            circle: player, rectangle: boundary
+        })
+        ) {
+            console.log("collide");
+            player.velocity.y = 0
+            player.velocity.x = 0
+        }
+    })
+    player.update()
+    // player.velocity.y = 0
+    // player.velocity.x = 0
+
+    // if (keys.w.pressed && lastkey === 'w') {
+    //     player.velocity.y = -5
+    // } else if (keys.a.pressed && lastkey === 'a') {
+    //     player.velocity.x = -5
+    // } else if (keys.s.pressed && lastkey === 's') {
+    //     player.velocity.y = 5
+    // } else if (keys.d.pressed && lastkey === 'd') {
+    //     player.velocity.x = 5
+    // }
 }
 
 animate()
